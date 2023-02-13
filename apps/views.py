@@ -161,35 +161,6 @@ class AnalysisVideoTaskView(views.APIView):
         pprint.pprint(respData)
         return Response(respData)
         
-        
-        #analysis image
-        print("analyse image")
-        responseData = {
-                "resultCode":"200",
-                "resultValue":[],
-                "resultHint":None,
-            }
-        resultValue = []
-        for item in videoInfos:
-            itemImages = item.get('images',[])
-            for ima in itemImages:
-                try:
-                    postData = {'image':(ima, open('tmpImages/'+ima,'rb'), 'image/jpeg')}
-                    resp = requests.post('http://25.67.137.20:8082/upload_image/',files=postData)
-                    respData = resp.content.decode('utf-8')
-                    data = json.loads(respData)
-                    FileName = data.get('FileName')
-                    verUrl = 'http://25.67.137.20:8082/aqzy/inspect_general/'
-                    verReqData = {"FileName":FileName, "DetModel":["all"]}
-                    verResp = requests.post(verUrl, json=verReqData)
-                    verRespData = json.loads(verResp.content.decode('utf-8'))
-                    responseData["resultValue"].append(dict(responseData,**item))
-                except Exception as e:
-                    responseData["resultCode"]=500
-                    responseData["resultValue"].append({"errorMessage":str(e)})
-                break
-        #return Response({'AnalysisImageTask-post-status':'ok'})
-        return Response(responseData)
 
 class TestView(views.APIView):
     def get(self, request, *args, **kwargs):
