@@ -14,4 +14,5 @@ RUN pip3 install -U pip -i https://pypi.douban.com/simple/
 RUN pip3 install -r requirements.txt -i https://pypi.douban.com/simple/
 
 EXPOSE 9595
-CMD python manage.py runserver 0.0.0.0:9595
+#CMD python manage.py runserver 0.0.0.0:9595
+CMD gunicorn HandleUV.wsgi:application --bind 0.0.0.0:9595 >> logs/log.log 2>&1
